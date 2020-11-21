@@ -7,23 +7,29 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/sky0621/try-wasm/try02/backend/apperror"
 	"github.com/sky0621/try-wasm/try02/backend/domain"
+	"github.com/sky0621/try-wasm/try02/backend/domain/vo"
 )
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input NewTodo) (*Todo, error) {
-	todo, err := domain.CreateTodo(domain.Todo{
-		Text:   domain.TodoText(input.Text),
-		UserID: domain.UserID(input.UserID),
+	todo, errs := domain.CreateTodo(domain.Todo{
+		Text:   vo.NewTodoText(input.Text),
+		UserID: vo.NewUserID(input.UserID),
 	})
-	if err != nil {
-		return nil, err
+	if errs != nil {
+		for _, err := range errs {
+			apperror.NewValidationError(err.Field, err.Value).AddGraphQLError(ctx)
+		}
+		return nil, nil
 	}
+
 	return &Todo{
 		ID:   "newID",
-		Text: string(todo.Text),
+		Text: string(*todo.Text),
 		Done: false,
 		User: &User{
-			ID:   string(todo.UserID),
+			ID:   string(*todo.UserID),
 			Name: "user1",
 		},
 	}, nil
