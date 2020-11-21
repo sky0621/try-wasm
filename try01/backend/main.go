@@ -6,10 +6,8 @@ import (
 )
 
 func main() {
-	port := "9595"
-	log.Printf("listen on http://localhost:%s", port)
-	http.Handle("/", http.FileServer(http.Dir("public")))
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
+	http.Handle("/", http.FileServer(http.Dir("asset")))
+	if err := http.ListenAndServe(":9595", nil); err != nil {
 		log.Fatal(err)
 	}
 }

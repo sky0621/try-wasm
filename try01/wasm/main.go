@@ -16,5 +16,6 @@ func isNumber(this js.Value, args []js.Value) interface{} {
 		return "ERROR: number of arguments doesn't match"
 	}
 
-	return args[0].IsNaN
+	return js.ValueOf(args[0])
+	//return args[0].IsNaN()
 }
