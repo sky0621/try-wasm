@@ -1,0 +1,19 @@
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <script src="wasm_exec.js"></script>
+    <script>
+        const go = new Go();
+        WebAssembly.instantiateStreaming(fetch("go.wasm"), go.importObject).then((result) => {
+            go.run(result.instance);
+        });
+    </script>
+    <title></title>
+</head>
+<body>
+    <h1>isNumber</h1>
+    <div>
+        <button onclick="isNumber('a');">a</button>
+    </div>
+</body>
+</html>
