@@ -1,23 +1,23 @@
 package domain
 
 import (
-	de "github.com/sky0621/try-wasm/try02/backend/domain/error"
-	"github.com/sky0621/try-wasm/try02/backend/domain/vo"
+	"errors"
+	"unicode/utf8"
 )
 
 type Todo struct {
-	Text   *vo.TodoText `json:"text"`
-	UserID *vo.UserID   `json:"userId"`
+	Text   string `json:"text"`
+	UserID string `json:"userId"`
 }
 
-func CreateTodo(todo Todo) (*Todo, []*de.DomainError) {
+func CreateTodo(todo Todo) (*Todo, []*Error) {
 	/*
 	 * バリデーション
 	 */
-	var domainErrors []*de.DomainError
+	var domainErrors []*Error
 
 	// ToDoテキストのバリデーション
-	vtt := vo.ValidateTodoText(todo.Text)
+	vtt := ValidateTodoText(todo.Text)
 	if vtt != nil {
 		domainErrors = append(domainErrors, vtt...)
 	}
@@ -37,4 +37,22 @@ func CreateTodo(todo Todo) (*Todo, []*de.DomainError) {
 		Text:   todo.Text,
 		UserID: todo.UserID,
 	}, nil
+}
+
+func ValidateTodoText(text string) []*Error {
+	// MEMO: 必須チェックを入れてみる。
+	if text == "" {
+		return []*Error{
+			{Field: "text", Value: "nil", Err: errors.New("required")},
+		}
+	}
+
+	// MEMO: 文字列長チェックを入れてみる。
+	cnt := utf8.RuneCountInString(text)
+	if cnt < 4 || cnt > 10 {
+		return []*Error{
+			{Field: "text", Value: text, Err: errors.New("length unmatch")},
+		}
+	}
+	return nil
 }

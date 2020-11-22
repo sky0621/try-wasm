@@ -7,29 +7,38 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/sky0621/try-wasm/try02/backend/apperror"
+	"github.com/99designs/gqlgen/graphql"
+	"github.com/vektah/gqlparser/v2/gqlerror"
+
 	"github.com/sky0621/try-wasm/try02/backend/domain"
-	"github.com/sky0621/try-wasm/try02/backend/domain/vo"
 )
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input NewTodo) (*Todo, error) {
 	todo, errs := domain.CreateTodo(domain.Todo{
-		Text:   vo.NewTodoText(input.Text),
-		UserID: vo.NewUserID(input.UserID),
+		Text:   input.Text,
+		UserID: input.UserID,
 	})
 	if errs != nil {
-		for _, err := range errs {
-			apperror.NewValidationError(err.Field, err.Value).AddGraphQLError(ctx)
+		for _, e := range errs {
+			graphql.AddError(ctx, &gqlerror.Error{
+				Message: "VALIDATION_FAILURE",
+				Extensions: map[string]interface{}{
+					"status_code":   400,
+					"error_message": e.Err.Error(),
+					"field":         e.Field,
+					"value":         e.Value,
+				},
+			})
 		}
 		return nil, nil
 	}
 
 	return &Todo{
 		ID:   "newID",
-		Text: string(*todo.Text),
+		Text: todo.Text,
 		Done: false,
 		User: &User{
-			ID:   string(*todo.UserID),
+			ID:   todo.UserID,
 			Name: "user1",
 		},
 	}, nil
