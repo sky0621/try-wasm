@@ -5,4 +5,4 @@ SCRIPT_DIR=$(dirname "$0")
 echo ${SCRIPT_DIR}
 cd "${SCRIPT_DIR}" && cd ../wasm
 
-GOOS=js GOARCH=wasm go build -o ../backend/asset/go.wasm
+GOOS=js GOARCH=wasm go build -o ../asset/go.wasm
