@@ -19,7 +19,7 @@ func validateTodoText(this js.Value, args []js.Value) interface{} {
 	}
 
 	if errs := domain.ValidateTodoText(args[0].String()); errs != nil {
-		var errMaps []map[string]interface{}
+		var errMaps []interface{}
 		for _, e := range errs {
 			errMaps = append(errMaps, map[string]interface{}{
 				"status_code":   400,
