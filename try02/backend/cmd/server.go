@@ -21,7 +21,8 @@ func main() {
 
 	srv := handler.NewDefaultServer(app.NewExecutableSchema(app.Config{Resolvers: &app.Resolver{}}))
 
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
+	http.Handle("/", http.FileServer(http.Dir("asset")))
+	http.Handle("/pg", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)

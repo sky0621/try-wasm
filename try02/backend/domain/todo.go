@@ -15,17 +15,23 @@ func CreateTodo(todo Todo) (*Todo, []*de.DomainError) {
 	 * バリデーション
 	 */
 	var domainErrors []*de.DomainError
+
+	// ToDoテキストのバリデーション
 	vtt := vo.ValidateTodoText(todo.Text)
 	if vtt != nil {
 		domainErrors = append(domainErrors, vtt...)
 	}
+
+	// MEMO: ユーザーIDのバリデーション
+	// 今回はバリデーション１事例あれば十分なので省略。
 
 	if domainErrors != nil {
 		return nil, domainErrors
 	}
 
 	/*
-	 * TODO: 何かしらの登録処理を行った後、結果を返却！
+	 * MEMO: 何かしらの登録処理を行った後、結果を返却！
+	 * 今回の趣旨ではないので省略。
 	 */
 	return &Todo{
 		Text:   todo.Text,
