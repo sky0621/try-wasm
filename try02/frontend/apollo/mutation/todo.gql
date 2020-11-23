@@ -1,0 +1,8 @@
+mutation createTodo($object: NewTodo!) {
+  createTodo(input: $object) {
+    Todo {
+      id
+      text
+    }
+  }
+}

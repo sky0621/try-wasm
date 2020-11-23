@@ -17,7 +17,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [],
+  plugins: ['@/plugins/vee-validate'],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
@@ -31,7 +31,7 @@ export default {
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [],
+  modules: ['@nuxtjs/apollo'],
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
   vuetify: {
@@ -52,6 +52,24 @@ export default {
     },
   },
 
+  apollo: {
+    clientConfigs: {
+      default: {
+        httpEndpoint: 'http://localhost:8080/query',
+      },
+    },
+    // 任意だけど、これがないとGraphQL的なエラー起きた時に原因が掴みづらいため
+    errorHandler: '~/plugins/apollo-error-handler.ts',
+  },
+
   // Build Configuration (https://go.nuxtjs.dev/config-build)
-  build: {},
+  build: {
+    transpile: ['vuetify/lib', 'vee-validate/dist/rules'],
+    babel: {
+      plugins: [
+        ['@babel/plugin-proposal-decorators', { legacy: true }],
+        ['@babel/plugin-proposal-class-properties', { loose: true }],
+      ],
+    },
+  },
 }
