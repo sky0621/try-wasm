@@ -3,14 +3,34 @@
     <meta charset="utf-8">
     <script src="wasm_exec.js"></script>
     <script>
-        const go = new Go();
-        WebAssembly.instantiateStreaming(fetch("go.wasm"), go.importObject).then((result) => {
-            go.run(result.instance);
-        });
+        const go = new Go(); // Defined in wasm_exec.js
+        const WASM_URL = 'go.wasm';
+
+        let wasm;
+
+        if ('instantiateStreaming' in WebAssembly) {
+            WebAssembly.instantiateStreaming(fetch(WASM_URL), go.importObject).then(function (obj) {
+                wasm = obj.instance;
+                go.run(wasm);
+            })
+        } else {
+            fetch(WASM_URL).then(resp =>
+                resp.arrayBuffer()
+            ).then(bytes =>
+                WebAssembly.instantiate(bytes, go.importObject).then(function (obj) {
+                    wasm = obj.instance;
+                    go.run(wasm);
+                })
+            )
+        }
 
         function validateTodoTextV(text) {
             const res = validateTodoText(text)
-            console.log(res)
+            if (res) {
+                res.forEach((r) => {
+                    console.log(r)
+                })
+            }
         }
     </script>
     <title>validateTodoText</title>
@@ -18,7 +38,7 @@
 <body>
     <h1>validateTodoText</h1>
     <div>
-        <button onclick="validateTodoTextV('abc');">abc</button>
+        <button onclick="validateTodoTextV('abcdefghijk');">abc</button>
     </div>
 </body>
 </html>
