@@ -13,7 +13,7 @@
               <ValidationProvider
                 v-slot="{ errors }"
                 name="TODO"
-                rules="required|min:4|max:10"
+                rules="todoText"
               >
                 <v-text-field
                   v-model="todoInput.text"
@@ -71,6 +71,7 @@ export default class TodoForm extends Vue {
     const valid = await this.$refs.observer.validate()
     if (valid) {
       console.log('valid!!!')
+      // MEMO: GraphQLを介してバックエンドに登録内容を送信。（今回の検証範囲外なので省略）
     }
   }
 }

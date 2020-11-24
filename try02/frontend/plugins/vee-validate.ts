@@ -4,11 +4,23 @@ import {
   ValidationObserver,
   ValidationProvider
 } from 'vee-validate'
-import { max, min, required } from 'vee-validate/dist/rules'
+import { required } from 'vee-validate/dist/rules'
 
 Vue.component('ValidationProvider', ValidationProvider)
 Vue.component('ValidationObserver', ValidationObserver)
 
+extend('todoText', {
+  validate: (value: string) => {
+    if (value.length < 4) {
+      return false
+    }
+    if (value.length > 10) {
+      return false
+    }
+    return true
+  },
+  message() {
+    return 'TODOは4文字以上、10文字以内です。'
+  }
+})
 extend('required', required)
-extend('min', min)
-extend('max', max)
