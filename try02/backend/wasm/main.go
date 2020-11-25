@@ -18,17 +18,8 @@ func validateTodoText(this js.Value, args []js.Value) interface{} {
 		return "ERROR: number of arguments doesn't match"
 	}
 
-	if errs := domain.ValidateTodoText(args[0].String()); errs != nil {
-		var errMaps []interface{}
-		for _, e := range errs {
-			errMaps = append(errMaps, map[string]interface{}{
-				"status_code":   400,
-				"error_message": e.Err.Error(),
-				"field":         e.Field,
-				"value":         e.Value,
-			})
-		}
-		return errMaps
+	if res := domain.ValidateTodoText(args[0].String()); res != nil {
+		return res.Err.Error()
 	}
 	return nil
 }

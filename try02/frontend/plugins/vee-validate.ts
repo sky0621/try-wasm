@@ -11,10 +11,10 @@ Vue.component('ValidationObserver', ValidationObserver)
 
 extend('todoText', {
   validate: (value: string) => {
-    if (value.length < 4) {
-      return false
-    }
-    if (value.length > 10) {
+    // @ts-ignore
+    const res = validateTodoText(value)
+    console.log(res)
+    if (res && res !== '') {
       return false
     }
     return true

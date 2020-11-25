@@ -11,6 +11,10 @@ export default {
       { hid: 'description', name: 'description', content: '' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    script: [
+      { src: 'wasm_exec.js' },
+      { src: 'init_wasm.js' },
+    ],
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
